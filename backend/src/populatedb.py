@@ -13,8 +13,7 @@ def populate_default_data():
     ]
     # ✅ Insert Default Users (with Hashed Passwords)
     users = [
-        User(email="admin@pragmaticdigital.in", password_hash=generate_password_hash("Admin123"),departmen_id=1),
-        User(email="user1@example.com", password_hash=generate_password_hash("password1"),department_id=1)
+        User(email="admin@pragmaticdigital.in", password_hash=generate_password_hash("Admin123"),departmen_id=1)
     ]
 
     # ✅ Insert Default Categories

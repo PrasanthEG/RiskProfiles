@@ -13,7 +13,7 @@ CREATE TABLE users (
     first_login_flag BOOLEAN DEFAULT TRUE,
     user_type VARCHAR(20) NOT NULL,
     created_by INT,
-    reset_token = VARCHAR(100)  UNIQUE,
+    reset_token  VARCHAR(100)  UNIQUE,
     reset_token_expiry = TIMESTAMP 
 
 );
