@@ -24,7 +24,7 @@ const UserList = () => {
                 return;
             }
 
-            const response =await fetch(`http://127.0.0.1:5000/api/get_users?page=${page}&per_page=5`, {
+            const response =await fetch(`${API_BASE_URL}/get_users?page=${page}&per_page=5`, {
                
                 method: "GET",
                 headers: {
