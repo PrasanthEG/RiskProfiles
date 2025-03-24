@@ -25,7 +25,7 @@ const EditUserModal = ({ user, closeModal, updateUser }) => {
             try {
                 const response = await fetch(`${API_BASE_URL}/departments`); // API endpoint to get departments
                 const data = await response.json();
-                //alert(data.departments)
+                
                 setDepartments(data);
                  // Assuming response has a key 'departments'
             } catch (error) {

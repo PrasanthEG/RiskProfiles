@@ -25,7 +25,7 @@ const AddUser = ({ closeModal, refreshUsers }) => {
     };
 
     useEffect(() => {
-        fetch(`${API_BASE_URL}/api/departments`)
+        fetch(`${API_BASE_URL}/departments`)
           .then((res) => res.json())
           .then((data) => setDepartments(data))
           .catch((err) => console.error("Error fetching departments", err));

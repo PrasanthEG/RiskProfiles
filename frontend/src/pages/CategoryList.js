@@ -22,8 +22,8 @@ const CategoryList = () => {
                 setLoading(false);
                 return;
             }
-
-            const response =await fetch(`http://127.0.0.1:5000/api/paginated_categories?page=${page}&per_page=5`, {
+            
+            const response =await fetch(`${API_BASE_URL}/paginated_categories?page=${page}&per_page=5`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

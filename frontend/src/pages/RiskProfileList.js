@@ -13,7 +13,7 @@ const RiskProfileList = () => {
         fetchRiskProfiles(currentPage);
     }, [currentPage]);
 
-    const fetchRiskProfiles = async () => {
+    const fetchRiskProfiles = async (page) => {
         try {
 
 
@@ -24,7 +24,7 @@ const RiskProfileList = () => {
                 return;
             }
 
-            const response =await fetch(`${API_BASE_URL}/risk_profiles?page=1&per_page=5`, {
+            const response =await fetch(`${API_BASE_URL}/risk_profiles?page=${page}&per_page=5`, {
                 method: "GET",
                 headers: {
                     "Content-Type": "application/json",

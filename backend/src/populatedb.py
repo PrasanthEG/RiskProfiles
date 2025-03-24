@@ -56,12 +56,12 @@ def populate_default_data():
     ]
 
     menus = [
-        Menu(menu_name="Users",menu_description="User Management",status="active"),
-        Menu(menu_name="Categories",menu_description="Category Management ",status="active"),
-        Menu(menu_name="Risk Profiles",menu_description="Risk Profile Management",status="active"),
-        Menu(menu_name="Test Options",menu_description="Test Strategy ",status="active"),
-        Menu(menu_name="Reports",menu_description=" Manage Reports ",status="active"),
-        Menu(menu_name="Settings",menu_description="Settings & Setup ",status="active")
+        Menu(menu_name="Users",menu_description="User Management",status="active",mem_default:"N"),
+        Menu(menu_name="Categories",menu_description="Category Management ",status="active",mem_default:"Y"),
+        Menu(menu_name="Risk Profiles",menu_description="Risk Profile Management",status="active",mem_default:"Y"),
+        Menu(menu_name="Test Options",menu_description="Test Strategy ",status="active",mem_default:"Y"),
+        Menu(menu_name="Reports",menu_description=" Manage Reports ",status="active",mem_default:"Y"),
+        Menu(menu_name="Settings",menu_description="Settings & Setup ",status="active",mem_default:"N")
         
     ]
 
