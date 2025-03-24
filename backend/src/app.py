@@ -12,6 +12,8 @@ from flask_jwt_extended.exceptions import NoAuthorizationError
 
 app = Flask(__name__)
 CORS(app)
+
+
 app.config.from_object(Config)
 app.config["JWT_SECRET_KEY"] = "PRAGMA#2025DIGITAL"  # Ensure it's set
 app.config["JWT_ACCESS_TOKEN_EXPIRES"] = timedelta(hours=1)  # Increase expiry

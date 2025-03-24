@@ -1,10 +1,12 @@
+import { API_BASE_URL } from "./config";
+
 export const checkSession = async () => {
     const token = localStorage.getItem("token"); // Retrieve token from localStorage or cookies
     
     if (!token) return false;
   
     try {
-      const response = await fetch("http://127.0.0.1:5000/api/check_session", {
+      const response = await fetch(`${API_BASE_URL}/check_session`, {
         method: "GET",
         headers: { Authorization: `Bearer ${token}` },
       });

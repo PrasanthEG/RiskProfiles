@@ -15,10 +15,14 @@ import secrets
 
 
 app = Flask(__name__)
+CORS(app)
+#app.register_blueprint(routes)
 
 RESET_PASS_LINK="http://localhost:3000/reset-password?token="
 
 api_blueprint = Blueprint('api', __name__)
+#@api_blueprint.route('/api')
+@cross_origin()  # CORS only for this route
 
 
 # @api_blueprint.before_request
