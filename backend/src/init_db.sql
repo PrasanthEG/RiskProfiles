@@ -1,22 +1,5 @@
 -- Users Table (Unchanged)
-CREATE TABLE users (
-    id SERIAL PRIMARY KEY,
-    firstname varchar(50),
-    lastname varchar(50),
-    email VARCHAR(255) UNIQUE NOT NULL,
-    password_hash TEXT NOT NULL,
-    department_id INT REFERENCES department(id) ON DELETE CASCADE,
-    designation_name VARCHAR(50),
-    created_by INT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    status VARCHAR(20) NOT NULL,
-    first_login_flag BOOLEAN DEFAULT TRUE,
-    user_type VARCHAR(20) NOT NULL,
-    created_by INT,
-    reset_token  VARCHAR(100)  UNIQUE,
-    reset_token_expiry = TIMESTAMP 
 
-);
 
 CREATE TABLE department (
     id SERIAL PRIMARY KEY,
@@ -25,8 +8,28 @@ CREATE TABLE department (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     status VARCHAR(20) NOT NULL DEFAULT 'active' 
     
+);
+
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    firstname varchar(50),
+    lastname varchar(50),
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password_hash TEXT NOT NULL,
+    department_id INT REFERENCES department(id) ON DELETE CASCADE,
+    designation_name VARCHAR(50),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    status VARCHAR(20) NOT NULL,
+    first_login_flag BOOLEAN DEFAULT TRUE,
+    user_type VARCHAR(20) NOT NULL,
+    created_by INT,
+    reset_token  VARCHAR(100)  UNIQUE,
+    reset_token_expiry TIMESTAMP 
 
 );
+
+
 
 CREATE TABLE login_history (
     id SERIAL PRIMARY KEY,
@@ -53,7 +56,7 @@ CREATE TABLE categories (
     image_url TEXT,  -- URL for category full image
     created_by INT NOT NULL,  -- User ID of creator
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
 
     
 );
@@ -73,7 +76,7 @@ CREATE TABLE questions (
     status VARCHAR(10) DEFAULT 'active',
     created_by INT NOT NULL,  -- User ID of creator
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
 );
 
 
@@ -99,7 +102,7 @@ CREATE TABLE risk_profiles (
     tags TEXT, -- JSON or comma-separated tags/keywords
     status VARCHAR(10) NOT NULL CHECK (status IN ('active', 'inactive')), -- Profile Status
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP 
 );
 
 
@@ -117,7 +120,6 @@ CREATE TABLE user_risk (
     user_validation VARCHAR(20),
     validated_at TIMESTAMP,
     FOREIGN KEY (risk_profile_id) REFERENCES risk_profiles(id)
-    
 );
 
 CREATE TABLE menus (

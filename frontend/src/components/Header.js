@@ -39,13 +39,16 @@ const Header = () => {
               
                 if (!response.ok) {
                   portal_name="ADMIN CONSOLE"
+                  localStorage.setItem("portal_name", portal_name);
+                  return
                 }
-                
-                const data = await response.json();
-                setCurrentPage(data["id"]);
-                setPortalName(data["portal_name"]);
-                if (data["portal_name"])
-                  localStorage.setItem("portal_name", data["portal_name"]);
+                else{
+                  const data = await response.json();
+                  setCurrentPage(data["id"]);
+                  setPortalName(data["portal_name"]);
+                  if (data["portal_name"])
+                      localStorage.setItem("portal_name", data["portal_name"]);
+                }
               }
               
           } 

@@ -1,5 +1,5 @@
 from src.app import app, db
-from src.models import User, Category, Question, RiskProfile
+from src.models import User, Category, Question, RiskProfile,Department,Menu
 from werkzeug.security import generate_password_hash
 import json
 
@@ -13,7 +13,7 @@ def populate_default_data():
     ]
     # ✅ Insert Default Users (with Hashed Passwords)
     users = [
-        User(email="admin@pragmaticdigital.in", password_hash=generate_password_hash("Admin123"),departmen_id=1)
+        User(email="admin@pragmaticdigital.in", password_hash=generate_password_hash("Admin123"),department_id=1)
     ]
 
     # ✅ Insert Default Categories
@@ -56,12 +56,12 @@ def populate_default_data():
     ]
 
     menus = [
-        Menu(name="Users",description="User Management",status="active"),
-        Menu(name="Categories",description="Category Management ",status="active"),
-        Menu(name="Risk Profiles",description="Risk Profile Management",status="active"),
-        Menu(name="Test Options",description="Test Strategy ",status="active"),
-        Menu(name="Reports",description=" Manage Reports ",status="active"),
-        Menu(name="Settings",description="Settings & Setup ",status="active")
+        Menu(menu_name="Users",menu_description="User Management",status="active"),
+        Menu(menu_name="Categories",menu_description="Category Management ",status="active"),
+        Menu(menu_name="Risk Profiles",menu_description="Risk Profile Management",status="active"),
+        Menu(menu_name="Test Options",menu_description="Test Strategy ",status="active"),
+        Menu(menu_name="Reports",menu_description=" Manage Reports ",status="active"),
+        Menu(menu_name="Settings",menu_description="Settings & Setup ",status="active")
         
     ]
 
