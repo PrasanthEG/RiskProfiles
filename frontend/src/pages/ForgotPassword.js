@@ -14,6 +14,8 @@ const ForgotPassword = () => {
     <div className="login-container">
         <div className="login-box">
             <div>
+            <span className="org_header">  <img src="/icons/Logo.png" alt="Org Logo" className="logo_class" />  </span>
+
                 <h2>Forgot Password?</h2>
                 <input
                     type="email"
