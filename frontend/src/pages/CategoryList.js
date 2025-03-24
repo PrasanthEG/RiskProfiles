@@ -22,7 +22,6 @@ const CategoryList = () => {
                 setLoading(false);
                 return;
             }
-
             const response =await fetch(`${API_BASE_URL}/paginated_categories?page=${page}&per_page=5`, {
                 method: "GET",
                 headers: {

@@ -18,12 +18,12 @@ const UserList = () => {
 
 
             const token = localStorage.getItem("token"); // Get the token from local storage or session storage
+           
             if (!token) {
                 setError("Unauthorized: No token found");
                 setLoading(false);
                 return;
             }
-
             const response =await fetch(`${API_BASE_URL}/get_users?page=${page}&per_page=5`, {
                
                 method: "GET",

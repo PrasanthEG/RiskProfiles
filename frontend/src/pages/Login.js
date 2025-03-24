@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { loginUser } from "../services/api.js";
 
+
+
+
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -38,8 +41,9 @@ const Login = () => {
 
   return (
     <div className="login-container">
+      
       <div className="login-box">
-        <h2>Welcome Back</h2>
+        <h2> <span className="org_header">  <img src="/icons/Logo.png" alt="Org Logo" className="logo_class" />  </span></h2>
         <p className="sub-text">Sign in to access your dashboard</p>
         <form onSubmit={handleLogin}>
           <div className="input-group">
@@ -66,7 +70,7 @@ const Login = () => {
           <p>
             <a href="#" onClick={() => navigate("/forgot-password")}>Forgot Password?</a>
           </p>
-          {/* Display error message if login fails */}
+        
           {errorMessage && <p className="error-message">{errorMessage}</p>}
         </form>
       </div>
@@ -75,3 +79,4 @@ const Login = () => {
 };
 
 export default Login;
+ 
