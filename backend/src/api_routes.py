@@ -11,6 +11,9 @@ from sqlalchemy import desc
 from werkzeug.security import generate_password_hash
 import secrets
 from config import RESET_PASS_LINK
+import smtplib
+from email.mime.multipart import MIMEMultipart
+from email.mime.text import MIMEText
 
 
 
@@ -138,7 +141,7 @@ def forgot_password():
     user = User.query.filter_by(email=email).first()
     if not user:
         return jsonify({"status": "FAILED", "message": "User not found"}), 404
-
+    username="{user.firstname} {user.lastname}"
     # Generate reset token
     reset_token = secrets.token_urlsafe(32)
     user.reset_token = reset_token
@@ -149,7 +152,7 @@ def forgot_password():
     # Simulate sending email (replace with actual email logic)
     reset_link = f"{RESET_PASS_LINK}{reset_token}"
     print(f"Send this link via email: {reset_link}")
-
+    send_email(email,username,reset_link)
     return jsonify({"status": "SUCCESS", "message": "Password reset link sent to your email."})
 
 
@@ -278,6 +281,44 @@ def update_user_status():
     except Exception as e:
         db.session.rollback()
         return jsonify({"status": "ERROR", "message": str(e)}), 500
+
+
+
+
+def send_email(recepient,name,link):
+
+    # SMTP Configuration
+    SMTP_SERVER = "smtp.gmail.com"
+    SMTP_PORT = 587
+    GMAIL_USER = "e.g.prasanth@gmail.com"
+    GMAIL_PASSWORD = "gfhm mhgf rstn kipy"  # Use App Password
+
+    # Email Content
+    to_email = recepient
+    subject = "Password Reset Email"
+    body = "Hi {name}, You recently requested for forgot password option for Admin Portal. \
+    Please click on the verify link to  confirm the address belongs to you. \
+    {link}\
+    If you did not make this change or you believe an unauthorized person has accessed your account, you should contact your adminstrator. \
+    Support."
+
+    # Create Message
+    msg = MIMEMultipart()
+    msg["From"] = GMAIL_USER
+    msg["To"] = to_email
+    msg["Subject"] = subject
+    msg.attach(MIMEText(body, "plain"))
+
+    # Send Email
+    try:
+        server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
+        server.starttls()  # Secure the connection
+        server.login(GMAIL_USER, GMAIL_PASSWORD)
+        server.sendmail(GMAIL_USER, to_email, msg.as_string())
+        server.quit()
+        print("✅ Email sent successfully!")
+    except Exception as e:
+        print(f"❌ Error: {e}")
 
 
 @api_blueprint.route('/api/categories', defaults={'option': None}, methods=['GET'])
