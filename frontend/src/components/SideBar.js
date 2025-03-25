@@ -72,7 +72,7 @@ const SideBar = () => {
                                    
                                    
                                     <li className="menu_class_li" key={index}>
-                                       <img src={`/icons/${menu.menu_name}.png`} alt={`${menu.menu_name} icon`} style={{ width: "16px", height: "16px", marginRight: "3px" }} />
+                                       <img src={`/icons/${menu.menu_name}.png`} alt={`${menu.menu_name} icon`} style={{ width: "16px", height: "16px", marginRight: "10px" }} />
                                         <a href={menu.link}>{menu.menu_name}</a>
                                     </li>
                                    ))}
