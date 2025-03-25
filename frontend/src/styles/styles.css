@@ -738,3 +738,11 @@ a:active {
     align-items: center;
 
   }
+
+
+  .portal_name {
+    background: none;
+    border: none;
+    color: #180855;
+    padding: 5px;
+  }
