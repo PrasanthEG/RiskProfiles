@@ -731,6 +731,7 @@ a:active {
   
   .menu_class_li {
     padding: 10px;
+    display: block;
     border-bottom: 1px solid #ddd;
     color: rgb(11, 10, 10);
     justify-content: space-between;
