@@ -1,0 +1,285 @@
+
+> frontend@1.0.0 start
+> react-scripts start
+
+(node:5111) [DEP_WEBPACK_DEV_SERVER_ON_AFTER_SETUP_MIDDLEWARE] DeprecationWarning: 'onAfterSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:5111) [DEP_WEBPACK_DEV_SERVER_ON_BEFORE_SETUP_MIDDLEWARE] DeprecationWarning: 'onBeforeSetupMiddleware' option is deprecated. Please use the 'setupMiddlewares' option.
+Starting the development server...
+
+Compiled successfully!
+
+You can now view frontend in the browser.
+
+  Local:            http://localhost:3000
+  On Your Network:  http://10.10.101.138:3000
+
+Note that the development build is not optimized.
+To create a production build, use yarn build.
+
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Failed to compile.
+
+[eslint] 
+src/pages/Login.js
+Syntax error: 'return' outside of function. (81:0) (81:undefined)
+ERROR in ./src/pages/Login.js
+Module build failed (from ./node_modules/babel-loader/lib/index.js):
+SyntaxError: /Users/a91994/Desktop/Projects/RiskProfile/frontend/src/pages/Login.js: 'return' outside of function. (81:0)
+
+  79 |
+  80 |
+> 81 | return (
+     | ^
+  82 |   <div className="login-page">
+  83 |     <div className="login-left">
+  84 |       <div className="login-logo">🔷 Template<br />Design</div>
+    at constructor (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:360:19)
+    at FlowParserMixin.raise (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:3327:19)
+    at FlowParserMixin.parseReturnStatement (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:12780:12)
+    at FlowParserMixin.parseStatementContent (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:12437:21)
+    at FlowParserMixin.parseStatementLike (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:12406:17)
+    at FlowParserMixin.parseStatementLike (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:5140:24)
+    at FlowParserMixin.parseModuleItem (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:12383:17)
+    at FlowParserMixin.parseBlockOrModuleBlockBody (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:12960:36)
+    at FlowParserMixin.parseBlockBody (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:12953:10)
+    at FlowParserMixin.parseProgram (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:12280:10)
+    at FlowParserMixin.parseTopLevel (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:12270:25)
+    at FlowParserMixin.parseTopLevel (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:5909:28)
+    at FlowParserMixin.parse (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:14120:10)
+    at parse (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/parser/lib/index.js:14154:38)
+    at parser (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/core/lib/parser/index.js:41:34)
+    at parser.next (<anonymous>)
+    at normalizeFile (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/core/lib/transformation/normalize-file.js:64:37)
+    at normalizeFile.next (<anonymous>)
+    at run (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/core/lib/transformation/index.js:22:50)
+    at run.next (<anonymous>)
+    at transform (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/core/lib/transform.js:22:33)
+    at transform.next (<anonymous>)
+    at step (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/gensync/index.js:261:32)
+    at /Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/gensync/index.js:273:13
+    at async.call.result.err.err (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/gensync/index.js:223:11)
+    at /Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/gensync/index.js:189:28
+    at /Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/@babel/core/lib/gensync-utils/async.js:67:7
+    at /Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/gensync/index.js:113:33
+    at step (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/gensync/index.js:287:14)
+    at /Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/gensync/index.js:273:13
+    at async.call.result.err.err (/Users/a91994/Desktop/Projects/RiskProfile/frontend/node_modules/gensync/index.js:223:11)
+
+ERROR in [eslint] 
+src/pages/Login.js
+  Line 81:  Parsing error: 'return' outside of function. (81:0)
+
+webpack compiled with 2 errors
+Compiling...
+Failed to compile.
+
+Attempted import error: './pages/Login' does not contain a default export (imported as 'Login').
+ERROR in ./src/App.js 55:44-49
+export 'default' (imported as 'Login') was not found in './pages/Login' (module has no exports)
+
+webpack compiled with 1 error
+Compiling...
+Failed to compile.
+
+Attempted import error: './pages/Login' does not contain a default export (imported as 'Login').
+ERROR in ./src/App.js 55:44-49
+export 'default' (imported as 'Login') was not found in './pages/Login' (module has no exports)
+
+webpack compiled with 1 error
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
+Compiling...
+Compiled successfully!
+webpack compiled successfully
