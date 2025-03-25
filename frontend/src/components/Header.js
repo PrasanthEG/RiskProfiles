@@ -64,8 +64,7 @@ const Header = () => {
       {/* Left: Organization Name & Logo */}
       <div className="flex items-center gap-3">
         <span className="org_header">  <img src="/icons/Logo.png" alt="Org Logo" className="logo_class" />  </span>
-       
-        <span className="org_header">{portal_name}</span>
+        <span className="org_header logo_class">{portal_name}</span>
       </div>
 
 
