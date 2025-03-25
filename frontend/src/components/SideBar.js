@@ -71,16 +71,16 @@ const SideBar = () => {
                                  {displayedMenus.map((menu, index) => (
                                    
                                    
-                                    <li key={index}>
-                                       <img src={`/icons/${menu.menu_name}.png`} alt={`${menu.menu_name} icon`} style={{ width: "16px", height: "16px", marginRight: "8px" }} />
+                                    <li className="menu_class_li" key={index}>
+                                       <img src={`/icons/${menu.menu_name}.png`} alt={`${menu.menu_name} icon`} style={{ width: "16px", height: "16px", marginRight: "3px" }} />
                                         <a href={menu.link}>{menu.menu_name}</a>
                                     </li>
                                    ))}
                                   <li>
-                                    <button className="logout-button" onClick={() => {
+                                     <button className="logout-button" onClick={() => {
                                         localStorage.removeItem("token"); 
                                         window.location.href = "/"; // Redirect to login
-                                    }}>
+                                     }}>
                                         Logout
                                     </button>
                                   </li>
