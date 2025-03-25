@@ -44,7 +44,7 @@ const Login = () => {
       
       <div className="login-box">
         <h2> <span className="org_header">  <img src="/icons/Logo.png" alt="Org Logo" className="logo_class" />  </span></h2>
-        <p className="sub-text">Sign in to access your dashboard</p>
+        <p className="sub-text">Sign in to access your Admin Console</p>
         <form onSubmit={handleLogin}>
           <div className="input-group">
             <label>Email</label>

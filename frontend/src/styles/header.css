@@ -72,3 +72,9 @@
     height: 24px;
   }
   
+  .portal_name {
+    background: none;
+    border: none;
+    color: #100637;
+    padding: 5px;
+  }
