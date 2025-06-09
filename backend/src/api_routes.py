@@ -3,46 +3,60 @@ from sqlalchemy.orm import aliased
 from sqlalchemy.sql import case
 from flask_jwt_extended import create_access_token,jwt_required,get_jwt_identity,decode_token,verify_jwt_in_request
 from src.extensions import db
-from src.models import User, Question, Response,Category , RiskProfile,UserRisk,Menu,User_ACL,LoginHistory,Department,Organisation
+from src.models import User, Question, Response,Category , RiskProfile,UserRisk,Menu,User_ACL,LoginHistory,Department,Organisation,RiskAssetAllocation,Asset,Basket,ThemePortfolio
 from datetime import datetime,timedelta
 from flask_cors import CORS, cross_origin
 from sqlalchemy import func
 from sqlalchemy import desc
 from werkzeug.security import generate_password_hash
+from werkzeug.utils import secure_filename
 import secrets
-from config import RESET_PASS_LINK
+#from src.config import RESET_PASS_LINK
+#from src.config import Config
+
 import smtplib
+import os
+import uuid
+import requests
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
+from src.config import Config
+
+ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}
+
+
 
 
 
 
 app = Flask(__name__)
 CORS(app)
+app.config.from_object(Config)
+app.config['UPLOAD_FOLDER'] = os.path.join(os.getcwd(), 'static', 'gallery')
+app.config['MAX_CONTENT_LENGTH'] = 16 * 1024 * 1024  # 16 MB limit
 #app.register_blueprint(routes)
 
-
+RESET_PASS_LINK=app.config.get("RESET_PASS_LINK", "https://risk.pragmadigital.in")
 
 api_blueprint = Blueprint('api', __name__)
 #@api_blueprint.route('/api')
 @cross_origin()  # CORS only for this route
 
 
-# @api_blueprint.before_request
-# def log_headers():
-#     print(f"Incoming Request: {request.method} {request.url}")
-#     print(f"Headers: {request.headers}")
-
+@api_blueprint.before_request
+def log_headers():
+    print(f"Incoming Request: {request.method} {request.url}")
+    print(f"Headers: {request.headers}")
+   
 
 @api_blueprint.route("/api/check_session", methods=["GET"])
-@jwt_required()  # Requires a valid token
-def check_session():
-   
+@jwt_required()
+def check_session():           
     try:
         user = get_jwt_identity()  # Extract user info from JWT
         return jsonify({"authenticated": True, "user": user}), 200
     except Exception as e:
+        print(str(e))
         return jsonify({"authenticated": False, "error": str(e)}), 401
 
 
@@ -141,16 +155,18 @@ def forgot_password():
     user = User.query.filter_by(email=email).first()
     if not user:
         return jsonify({"status": "FAILED", "message": "User not found"}), 404
-    username="{user.firstname} {user.lastname}"
+    
+    username = f"{user.firstname} {user.lastname}"
     # Generate reset token
     reset_token = secrets.token_urlsafe(32)
     user.reset_token = reset_token
     user.reset_token_expiry = datetime.utcnow() + timedelta(minutes=60)
 
     db.session.commit()
+    print(app.config["RESET_PASS_LINK"])
 
     # Simulate sending email (replace with actual email logic)
-    reset_link = f"{RESET_PASS_LINK}{reset_token}"
+    reset_link = f"{app.config["RESET_PASS_LINK"]}{reset_token}"
     print(f"Send this link via email: {reset_link}")
     send_email(email,username,reset_link)
     return jsonify({"status": "SUCCESS", "message": "Password reset link sent to your email."})
@@ -284,31 +300,45 @@ def update_user_status():
 
 
 
-
 def send_email(recepient,name,link):
-
     # SMTP Configuration
     SMTP_SERVER = "smtp.gmail.com"
     SMTP_PORT = 587
-    GMAIL_USER = "e.g.prasanth@gmail.com"
+    GMAIL_USER = "e.g.prashanth@gmail.com"
     GMAIL_PASSWORD = "gfhm mhgf rstn kipy"  # Use App Password
 
     # Email Content
     to_email = recepient
     subject = "Password Reset Email"
-    body = "Hi {name}, You recently requested for forgot password option for Admin Portal. \
-    Please click on the verify link to  confirm the address belongs to you. \
-    {link}\
-    If you did not make this change or you believe an unauthorized person has accessed your account, you should contact your adminstrator. \
-    Support."
 
-    # Create Message
+
+    # Create the email message
     msg = MIMEMultipart()
+
+    # HTML Content
+    html_body = f"""
+    <html>
+    <head>
+</head>
+<body>
+    <div class="container">
+        <h2>Forgot password option.!</h2>
+        <p> Hi {name}, </p>
+        <p>You recently requested for forgot password option for Admin Portal. 
+    Please click on the verify link to  confirm the address belongs to you. </p>
+    <br/> <p> <a href={link}> Click this link to verify </a> </p>
+    If you did not make this change or you believe an unauthorized person has accessed your account, you should contact your adminstrator. \
+    Support.
+    </div>
+</body>
+</html>
+"""
+
+    # Attach HTML content
+    msg.attach(MIMEText(html_body, "html"))
     msg["From"] = GMAIL_USER
     msg["To"] = to_email
     msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
-
     # Send Email
     try:
         server = smtplib.SMTP(SMTP_SERVER, SMTP_PORT)
@@ -1038,6 +1068,315 @@ def update_organization():
         db.session.commit()
         return jsonify({"message": "Organization updated"})
     return jsonify({"error": "Organization not found"}), 404
+
+
+
+
+@api_blueprint.route('/api/assets', methods=['GET'])
+def get_assets():
+    assets = Asset.query.all()
+    result = [{
+        'id': a.id,
+        'asset_name': a.asset_name,
+        'description': a.description,
+        'status': a.status,
+        'created_at': a.created_at.isoformat()
+    } for a in assets]
+    return jsonify(result), 200
+
+@api_blueprint.route('/api/allocations/<int:risk_id>', methods=['GET'])
+def get_allocations(risk_id):
+    allocations = RiskAssetAllocation.query.filter_by(risk_id=risk_id).all()
+    result = [{
+        'risk_id': a.risk_id,
+        'asset_id': a.asset_id,
+        'allocation_percent': a.allocation_percent
+    } for a in allocations]
+    return jsonify(result), 200
+
+@api_blueprint.route('/api/allocations', methods=['POST'])
+def save_allocations():
+    data = request.get_json()
+    print(data)
+    risk_id = data.get('risk_id')
+    allocations = data.get('allocations')  # list of dicts: { asset_id, allocation_percent }
+    if not risk_id or not allocations:
+        return jsonify({'error': 'Invalid data'}), 400
+
+    # Delete existing allocations for this risk profile
+    RiskAssetAllocation.query.filter_by(risk_id=risk_id).delete()
+    print(f"Assets--")
+    for alloc in allocations:
+        asset_id = alloc.get('asset_id')
+        allocation_percent = alloc.get('allocation_percent')
+        if asset_id is None or allocation_percent is None:
+            continue
+        new_alloc = RiskAssetAllocation(risk_id=risk_id, asset_id=asset_id, allocation_percent=allocation_percent)
+        db.session.add(new_alloc)
+    
+    db.session.commit()
+    return jsonify({'message': 'Allocations saved successfully'}), 200
+
+
+@api_blueprint.route('/api/baskets', methods=['POST'])
+#@jwt_required()
+def create_basket():
+    print("inside api baskets")
+    data = request.get_json()
+    print(data)
+    #created_by = get_jwt_identity()  # Extract user info from JWT
+    
+    if not data:
+        return jsonify({'error': 'No input data provided'}), 400
+
+    try:
+        basket = Basket(
+            name=data.get('name'),
+            description=data.get('description'),
+            theme=data.get('theme'),
+            image=data.get('image'),
+            thumbnail=data.get('thumbnail'),
+            status=data.get('status', 'active'),
+            risk_profile_id=data.get('risk_profile_id'),
+            created_at=datetime.utcnow()
+        )
+        db.session.add(basket)
+        db.session.flush()  # to generate basket_id
+        db.session.commit()
+        return jsonify({'message': 'Basket created successfully', 'basket_id': basket.basket_id}), 200
+
+    
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+
+@api_blueprint.route('/api/get_baskets', methods=['GET'])
+def get_basket_records():
+    baskets = Basket.query.all()
+    # Fetch all risk profiles and create a mapping: id -> name
+    risk_profiles = {r.id: r.profile_name for r in RiskProfile.query.all()}
+    
+    result = [{
+        'basket_id': a.basket_id,
+        'name': a.name,
+        'theme': a.theme,
+        'description': a.description,
+        'image': a.image,
+        'thumbnail': a.thumbnail,
+        'status': a.status,
+        'created_at': a.created_at.isoformat(),
+        'risk_profile_name': risk_profiles.get(a.risk_profile_id, "Unknown")
+    } for a in baskets]
+    
+    return jsonify(result), 200
+
+@api_blueprint.route('/api/baskets/<basket_id>/portfolio/bulk', methods=['POST'])
+def add_portfolio_entries_bulk(basket_id):
+   
+    data = request.get_json()
+    if not data or "entries" not in data:
+        return jsonify({'error': 'No entries provided'}), 400
+
+    new_entries = data["entries"]
+
+    # Count existing portfolio entries for this basket.
+    existing_count = ThemePortfolio.query.filter_by(basket_id=basket_id).count()
+    if existing_count + len(new_entries) > 20:
+        return jsonify({'error': 'Maximum portfolio entries (20) exceeded'}), 400
+
+    for entry in new_entries:
+        portfolio_entry = ThemePortfolio(
+            basket_id=basket_id,
+            asset_symbol=entry.get('asset_symbol'),
+            exchange=entry.get('exchange'),
+            sym_name=entry.get('sym_name'),
+            asset_type_id=entry.get('asset_type_id'),
+            price_while_added=float(entry.get('price_while_added', 0) or 0),
+            weightage=float(entry.get('weightage', 0) or 0),
+            status=entry.get('status', 'active'),
+            created_at=datetime.utcnow()
+        )
+        db.session.add(portfolio_entry)
+
+    db.session.commit()
+    return jsonify({'message': 'Bulk portfolio entries added successfully'}), 200
+
+
+    try:
+        print("")
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
+
+@api_blueprint.route('/api/get_baskets/<basket_id>', methods=['GET'])
+def get_basket(basket_id):
+    print("inside baskets ---(2)")
+    basket = Basket.query.filter_by(basket_id=basket_id).first()
+    if not basket:
+        return jsonify({'error': 'Basket not found'}), 404
+
+    portfolio = [{
+        'id': entry.id,
+        'asset_symbol': entry.asset_symbol,
+        'exchange': entry.exchange,
+        'sym_name': entry.sym_name,
+        'asset_type_id': entry.asset_type_id,
+        'price_while_added': entry.price_while_added,
+        'weightage': entry.weightage,
+        'status': entry.status,
+        'created_at': entry.created_at.isoformat()
+    } for entry in basket.portfolio]
+
+    result = {
+        'basket_id': basket.basket_id,
+        'name': basket.name,
+        'description': basket.description,
+        'theme': basket.theme,
+        'image': basket.image,
+        'thumbnail': basket.thumbnail,
+        'status': basket.status,
+        'risk_profile_id': basket.risk_profile_id,
+        'created_by': basket.created_by,
+        'created_at': basket.created_at.isoformat(),
+        'portfolio': portfolio
+    }
+    return jsonify(result), 200
+
+
+@api_blueprint.route('/api/edit_baskets/<basket_id>', methods=['POST','PUT'])
+def edit_basket(basket_id):
+    data = request.get_json()
+    basket = Basket.query.filter_by(basket_id=basket_id).first()
+    if not basket:
+        return jsonify({'error': 'Basket not found'}), 404
+    
+    basket.name= data.get('name')
+    basket.description= data.get('description')
+    basket.theme= data.get('theme')
+    
+    db.session.commit()
+        
+    return jsonify({'message': 'Basket updated successfully'}), 200
+
+def allowed_file(filename):
+    """Check if a file has an allowed extension."""
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+
+@api_blueprint.route('/api/gallery', methods=['POST'])
+def upload_file():
+    print(request.files)
+    # Ensure file is part of the request
+    if 'file' not in request.files:
+        return jsonify({'error': 'No file part in the request'}), 400
+    file = request.files['file']
+    
+    # If no file is selected
+    if file.filename == '':
+        return jsonify({'error': 'No file selected'}), 400
+    
+    if file and allowed_file(file.filename):
+        # Secure the filename and add a unique identifier to avoid name collisions
+        filename = secure_filename(file.filename)
+        unique_filename = f"{uuid.uuid4().hex}_{filename}"
+        
+        # Create upload folder if it doesn't exist
+        os.makedirs(app.config['UPLOAD_FOLDER'], exist_ok=True)
+        
+        # Save the file
+       
+        file_path = os.path.join(app.config['UPLOAD_FOLDER'], unique_filename)
+        file.save(file_path)
+        
+        # Construct a URL for the uploaded file; adjust the URL path as needed
+        file_url = f"/static/gallery/{unique_filename}"
+        return jsonify({'url': file_url}), 200
+    else:
+        return jsonify({'error': 'File type not allowed'}), 400
+
+
+
+
+@api_blueprint.route('/api/symbol-lookup', methods=['GET'])
+def symbol_lookup():
+    query = request.args.get('query', '')
+    asset_type = request.args.get('assetType', '')
+    
+    if not query or not asset_type:
+        return jsonify([])
+
+    # Example: Fetch symbols from an external API
+    api_url = f"{app.config['SYM_LOOKUP_API']}/symbols?query={query}&assetType={asset_type}"
+    response = requests.get(api_url)
+    
+    if response.status_code == 200:
+        return jsonify(response.json())
+    return jsonify([])
+
+
+@api_blueprint.route('/api/theme_portfolios/save', methods=['POST'])
+def save_theme_portfolio(): 
+    try:
+        data = request.json
+    
+        if not data:
+            return jsonify({'error': 'Invalid input, expected a list of portfolios'}), 400
+
+        if not data.get("basket_id"):
+            return jsonify({'error': 'Basket ID is required'}), 400
+        
+        basket_id = data["basket_id"]
+    
+        # Fetch existing symbols in watchlist for this basket_id
+        existing_symbols = {tp.asset_symbol: tp for tp in ThemePortfolio.query.filter_by(basket_id=basket_id, status="active").all()}
+    
+        portfolio_data=data["portfolios"]
+        received_symbols = set(entry["asset_symbol"] for entry in portfolio_data)
+        # Mark symbols that are no longer in the new list as "inactive"
+        for symbol, portfolio in existing_symbols.items():
+            if symbol not in received_symbols:
+                portfolio.status = "inactive"
+                db.session.add(portfolio)
+
+        new_portfolios = []
+
+        # Insert or update new symbols
+        for entry in portfolio_data:
+            symbol = entry["asset_symbol"]
+
+            if symbol in existing_symbols:
+                # Update existing entry
+                existing_symbols[symbol].exchange = entry.get('exchange', existing_symbols[symbol].exchange)
+                existing_symbols[symbol].weightage = float(entry.get('weightage', 0))
+            else:
+                # Create a new entry
+                portfolio_entry = ThemePortfolio(
+                    basket_id=basket_id,
+                    asset_symbol=symbol,
+                    exchange=entry.get('exchange'),
+                    sym_name=entry.get('sym_name'),
+                    asset_type_id=entry.get('asset_type_id'),
+                    price_while_added=float(entry.get('price_while_added', 0)),
+                    weightage=float(entry.get('weightage', 0)),
+                    status=entry.get('status', 'active'),
+                    created_at=datetime.utcnow()
+                )
+                db.session.add(portfolio_entry)
+                new_portfolios.append(portfolio_entry)
+
+        db.session.commit()
+        
+        return jsonify({
+            'message': 'Theme portfolios updated successfully',
+            'new_count': len(new_portfolios),
+            'inactive_count': len(existing_symbols) - len(received_symbols)
+        }), 201
+   
+        
+    except Exception as e:
+        db.session.rollback()
+        return jsonify({'error': str(e)}), 500
 
 if __name__ == "__main__":
     app.run(debug=True)
