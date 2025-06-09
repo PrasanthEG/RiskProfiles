@@ -303,3 +303,58 @@ class Organisation(db.Model):
             "smtp_server": self.smtp_server,
             "status": self.status
         }   
+
+class Asset(db.Model):
+    __tablename__ = 'assets'
+    id = db.Column(db.Integer, primary_key=True)
+    asset_name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(200))
+    status = db.Column(db.String(20), default='active')  # active/inactive
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+class RiskAssetAllocation(db.Model):
+    __tablename__ = 'risk_asset_allocation'
+    id = db.Column(db.Integer, primary_key=True)
+    risk_id = db.Column(db.Integer, db.ForeignKey('risk_profiles.id'), nullable=False)
+    asset_id = db.Column(db.Integer, db.ForeignKey('assets.id'), nullable=False)
+    allocation_percent = db.Column(db.Float, nullable=False)
+    
+    #risk = db.relationship('RiskProfile', backref=db.backref('allocations', lazy=True))
+    #asset = db.relationship('Asset', backref=db.backref('allocations', lazy=True))
+
+
+def generate_basket_id():
+    # Generate a random alphanumeric basket ID
+    return uuid.uuid4().hex[:8]  # 8-character hex string
+
+class Basket(db.Model):
+    __tablename__ = 'baskets'
+    basket_id = db.Column(db.String(20), primary_key=True, default=generate_basket_id)
+    name = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text)
+    theme = db.Column(db.String(50))
+    image = db.Column(db.String(200))
+    thumbnail = db.Column(db.String(200))
+    status = db.Column(db.String(20), default='active')  # active/inactive
+    risk_profile_id = db.Column(db.Integer, nullable=False)
+    created_by = db.Column(db.String(100), nullable=False)
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+
+    # Relationship to theme_portfolio
+    portfolio = db.relationship('ThemePortfolio', backref='basket', cascade="all, delete-orphan", lazy=True)
+
+class ThemePortfolio(db.Model):
+    __tablename__ = 'theme_portfolio'
+    id = db.Column(db.Integer, primary_key=True)
+    basket_id = db.Column(db.String(20), db.ForeignKey('baskets.basket_id'), nullable=False)
+    asset_symbol = db.Column(db.String(20), nullable=False) 
+    exchange= db.Column(db.String(20))
+    sym_name= db.Column(db.String(150))
+    asset_type_id = db.Column(db.Integer, db.ForeignKey('assets.id'), nullable=False) 
+    weightage =db.Column(db.Float,default=0.0)
+    price_while_added=db.Column(db.Float)
+    status = db.Column(db.String(20), default='active')  # active/inactive
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
+  
+
+
